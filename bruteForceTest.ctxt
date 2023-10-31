@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=bruteForceTest
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ bruteForceTest\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=lengthB\ uppercaseB\ lowercaseB\ symbolsB\ numbersB
+comment1.target=void\ bruteForce(int,\ boolean,\ boolean,\ boolean,\ boolean)
+numComments=2
