@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=bruteForceTestB
+comment1.params=lengthB\ uppercaseB\ lowercaseB\ symbolsB\ numbersB
+comment1.target=int[][]\ createTwoDeeArray(int,\ boolean,\ boolean,\ boolean,\ boolean)
+comment2.params=lengthB\ twoD
+comment2.target=int[]\ createOneDeeArray(int,\ int[][])
+comment3.params=lengthB\ twoD\ oneD
+comment3.target=void\ actualBruteForcing(int,\ int[][],\ int[])
+numComments=4

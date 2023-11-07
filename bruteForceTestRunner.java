@@ -12,7 +12,7 @@ public class bruteForceTestRunner
     public static void main(String[] args){
         //creates scanners and variables relating to password elements that will be used as arguments into a method later
         Scanner pref = new Scanner(System.in);
-        bruteForceTest testRunner = new bruteForceTest();
+        bruteForceTestB testRunner = new bruteForceTestB();
         int passwordLength;
         boolean uppercaseA;
         boolean lowercaseA;
@@ -31,7 +31,9 @@ public class bruteForceTestRunner
         symbolsA = pref.nextBoolean();
         System.out.println("Does the password contain numbers? (Enter true/false) :: ");
         numbersA = pref.nextBoolean();
-        //runs method with arguments
-        testRunner.bruteForce(passwordLength, uppercaseA, lowercaseA, symbolsA, numbersA);
+        //creates array with arguments
+        //testRunner.createTwoDeeArray(passwordLength, uppercaseA, lowercaseA, symbolsA, numbersA);
+        //testRunner.createOneDeeArray(passwordLength);
+        testRunner.actualBruteForcing(passwordLength, testRunner.createTwoDeeArray(passwordLength, uppercaseA, lowercaseA, symbolsA, numbersA), testRunner.createOneDeeArray(passwordLength, testRunner.createTwoDeeArray(passwordLength, uppercaseA, lowercaseA, symbolsA, numbersA))); 
     }
 }
