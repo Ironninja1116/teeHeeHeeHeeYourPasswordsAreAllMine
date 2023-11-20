@@ -2,7 +2,7 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
+import hashlib
 # FUNCTIONS
 # For passwords that are given, this automatically determines what type of characters are in the password (ie: numbers, uppercase, lowercase, etc.) index 0 represents symbol, index 1 represents number, index 2 represents uppercase, index 3 represents lowercase
 def analyzecharacters(word):
@@ -74,7 +74,6 @@ def makeprintedarray(passwordsize):
         printedarray.append(0)
     return printedarray
 
-# def crackpassword(options, printindex)
 
 # MAIN
 
@@ -104,6 +103,14 @@ if not inputtingPassword:
     for x in range(passwordLength):
         endPassword += chr(optionsarray[len(optionsarray)-2])
 print("Test: " + endPassword)
+# asks what type of hash encrypting is being used and updates endPassword based on what type of hash encryption is being used
+if trueorfalse("Is the password encrypted?"):
+    mdfive = trueorfalse("MD5 encryption?")
+    endPassword = hashlib.md5(bytes(endPassword, 'utf-8')).hexdigest()
+    if not mdfive:
+        bcrypt = trueorfalse("BCrypt encryption?")
+        if not bcrypt:
+            shatwofivesix = trueorfalse("SHA-256 encryption")
 # cracks password, using newly created arrays as
 currentPassword = None
 # adds one to the rightmost index of printed array
@@ -112,6 +119,9 @@ while currentPassword != endPassword:
     currentPassword = ""
     for x in range(0,passwordLength):
         currentPassword += chr(optionsarray[printedarray[x]])
+    # updates current password based on has encryption
+    if mdfive:
+        currentPassword = hashlib.md5(bytes(currentPassword, 'utf-8')).hexdigest()
     print(currentPassword)
     # adds one to the rightmost index of printed array
     printedarray[passwordLength-1] += 1
