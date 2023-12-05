@@ -4,6 +4,9 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import hashlib
 import bcrypt
+# checking if my filename matches actual file + extension bc im using windows
+import os
+print(os.listdir('.'))
 # FUNCTIONS
 # For passwords that are given, this automatically determines what type of characters are in the password (ie: numbers, uppercase, lowercase, etc.) index 0 represents symbol, index 1 represents number, index 2 represents uppercase, index 3 represents lowercase
 def analyzecharacters(word):
@@ -75,6 +78,16 @@ def makeprintedarray(passwordsize):
         printedarray.append(0)
     return printedarray
 
+# compares the most common passwords in the dicitionary to the correct password. If there's a match, the loop ends and returns true (ending the entire program). If none match, false is returned.
+def dictionaryattack(correctPassword):
+    attacklist = open("10-million-password-list-top-1000.txt", "r")
+    for password in attacklist:
+        print(password.replace("\n", "") + " = " + correctPassword + " ???")
+        if password.replace("\n", "") == correctPassword:
+            return True
+    return False
+
+
 
 # MAIN
 # Automatically sets hash values to false as default, important later
@@ -122,6 +135,13 @@ if trueorfalse("Is the password encrypted?"):
             endPassword = bcrypt.hashpw(bytes(endPassword, 'utf-8'), mysalt)
     else:
         endPassword = hashlib.md5(bytes(endPassword, 'utf-8')).hexdigest()
+# asks for and performs dictionary attack
+if trueorfalse("Would you like to perform a dictionary attack? "):
+    input("correct cp1")
+    if dictionaryattack(endPassword):
+        input("correct cp2")
+        exit()
+input("failed")
 # cracks password, using newly created arrays as
 currentPassword = None
 # adds one to the rightmost index of printed array
