@@ -9,17 +9,18 @@ import bcrypt
 # print(os.listdir('.'))
 # ARGPARSE
 import argparse
-myparser = argparse.ArgumentParser(description='crack a password')
+myparser = argparse.ArgumentParser(prog='main', description='crack a password')
 myparser.add_argument('--password', metavar='-PW', type=str, help='if you would like to insert your own plaintext password to crack (whether to test the program or to decrypt), this will store that password as a string')
 myparser.add_argument('--passwordlength', metavar='-PWl', type=int, help='use this to manually specify the length of the password if the password is not provided')
-myparser.add_argument('--uppercase', metavar='-u', help='if the password you\'re trying to crack includes uppercase characters, use this argument')
-myparser.add_argument('--lowercase', metavar='-l', help='if the password you\'re trying to crack includes lowercase characters, use this argument')
-myparser.add_argument('--numbers', metavar='-n', help='if the password you\'re trying to crack includes number characters, use this argument')
-myparser.add_argument('--symbols', metavar='-s', help='if the password you\'re trying to crack includes symbol characters, use this argument')
+myparser.add_argument('--uppercase', metavar='-u', type=bool, help='if the password you\'re trying to crack includes uppercase characters, use this argument')
+myparser.add_argument('--lowercase', metavar='-l', type=bool, help='if the password you\'re trying to crack includes lowercase characters, use this argument')
+myparser.add_argument('--numbers', metavar='-n', type=bool, help='if the password you\'re trying to crack includes number characters, use this argument')
+myparser.add_argument('--symbols', metavar='-s', type=bool, help='if the password you\'re trying to crack includes symbol characters, use this argument')
 myparser.add_argument('--hash', metavar='-H', type=str, help='use this to input a hash')
-myparser.add_argument('--MD5', metavar='-md5', help='if your password/hash uses md5 encryption use this argument')
-myparser.add_argument('--bcrypt', metavar='-b', help='if your password/hash uses bcrypt encryption use this argument')
-myparser.add_argument('--SHA265', metavar='-sha265', help='if the password/hash uses sha265 encryption use this argument')
+myparser.add_argument('--encryption', metavar='-E', type=str, choices=['md5', 'bcrypt', 'sha265'], help='if your password/hash uses md5 encryption use this argument')
+myparser.add_argument('--dictionary', metavar='-D', type=bool, help='use this argument if you want to do a dictionary attack')
+myparser.add_argument('--bruteforce', metavar='-BF', type=bool, help='use this argument if you want to do a brute force attack')
+
 args = myparser.parse_args()
 
 # FUNCTIONS
@@ -109,49 +110,60 @@ def dictionaryattack(correctPassword):
 mdfive = False
 bcryptCheck = False
 shatwofivesix = False
-# Asks whether user will be inputting a password or if they want the program until the end
-inputtingPassword = trueorfalse("Will you provide a password? ")
-# Automatically picks up features about password if given, asks user for these features if the password is not given
-if inputtingPassword:
-    endPassword = input("Please input a password: ")
+# Asks whether user will be inputting a password or if they want the program until the end (no longer needs to be asked
+# inputtingPassword = trueorfalse("Will you provide a password? ")
+# Automatically picks up features about password if given (args.password is the password from the argparser), otherwise the program will take in the information given about the password in the arguments
+if args.password:
+    print("YES")
+    endPassword = args.password
     print(endPassword)
     analysis = analyzecharacters(endPassword)
     passwordLength = len(endPassword)
 else:
-    passwordLength = int(input("(ENTER AS NUMBER) How many characters long is the password? "))
+    passwordLength = args.passwordlength
     analysis = [False, False, False, False]
-    analysis[0] = trueorfalse("Does the password contain symbols? (such as $, *, !, etc)")
-    analysis[1] = trueorfalse("Does the password contain numbers?")
-    analysis[2] = trueorfalse("Does the password contain uppercase characters?")
-    analysis[3] = trueorfalse("Does the password contain lowercase characters?")
+    analysis[0] = args.symbols
+    analysis[1] = args.numbers
+    analysis[2] = args.uppercase
+    analysis[3] = args.lowercase
 # creates arrays based on information about the password
 optionsarray = makeoptionsarray(analysis)
 printedarray = makeprintedarray(passwordLength)
 print(optionsarray)
 print(printedarray)
 # sets a target password if none was given
-if not inputtingPassword:
+if not args.password:
     endPassword = ""
     for x in range(passwordLength):
         endPassword += chr(optionsarray[len(optionsarray)-2])
 print("Test: " + endPassword)
 # asks what type of hash encrypting is being used and updates endPassword based on what type of hash encryption is being used
-if trueorfalse("Is the password encrypted?"):
-    mdfive = trueorfalse("MD5 encryption?")
-    if not mdfive:
-        bcryptCheck = trueorfalse("BCrypt encryption?")
-        if not bcryptCheck:
-            shatwofivesix = trueorfalse("SHA-256 encryption")
-            if shatwofivesix:
-                endPassword = hashlib.sha256(bytes(endPassword, 'utf-8')).hexdigest()
-        else:
+# if trueorfalse("Is the password encrypted?"):
+#     mdfive = trueorfalse("MD5 encryption?")
+#     if not mdfive:
+#         bcryptCheck = trueorfalse("BCrypt encryption?")
+#         if not bcryptCheck:
+#             shatwofivesix = trueorfalse("SHA-256 encryption")
+#             if shatwofivesix:
+#                 endPassword = hashlib.sha256(bytes(endPassword, 'utf-8')).hexdigest()
+#         else:
             # gensalt sets rounds to 12, prefix to b"2b"
-            mysalt = bcrypt.gensalt()
-            endPassword = bcrypt.hashpw(bytes(endPassword, 'utf-8'), mysalt)
-    else:
-        endPassword = hashlib.md5(bytes(endPassword, 'utf-8')).hexdigest()
+#             mysalt = bcrypt.gensalt()
+#           endPassword = bcrypt.hashpw(bytes(endPassword, 'utf-8'), mysalt)
+#    else:
+#        endPassword = hashlib.md5(bytes(endPassword, 'utf-8')).hexdigest()
+
+# changes password based on encryption pattern
+if args.encryption == 'md5':
+    endPassword = hashlib.md5(bytes(endPassword, 'utf-8')).hexdigest()
+if args.encryption == 'bcrypt':
+    # gensalt sets rounds to 12, prefix to b"2b"
+    mysalt = bcrypt.gensalt()
+    endPassword = bcrypt.hashpw(bytes(endPassword, 'utf-8'), mysalt)
+if args.encryption == 'sha265':
+    endPassword = hashlib.sha256(bytes(endPassword, 'utf-8')).hexdigest()
 # asks for and performs dictionary attack
-if trueorfalse("Would you like to perform a dictionary attack? "):
+if args.dictionary:
     input("correct cp1")
     if dictionaryattack(endPassword):
         input("correct cp2")
@@ -160,26 +172,27 @@ input("failed")
 # cracks password, using newly created arrays as
 currentPassword = None
 # adds one to the rightmost index of printed array
-while currentPassword != endPassword:
-    # updates currentpassword and prints password (only for debugging purposes)
-    currentPassword = ""
-    for x in range(0,passwordLength):
-        currentPassword += chr(optionsarray[printedarray[x]])
-    # updates current password based on has encryption
-    if mdfive:
-        currentPassword = hashlib.md5(bytes(currentPassword, 'utf-8')).hexdigest()
-    if bcryptCheck:
-        currentPassword = bcrypt.hashpw(bytes(currentPassword, 'utf-8'), mysalt)
-    if shatwofivesix:
-        currentPassword = hashlib.sha256(bytes(currentPassword, 'utf-8')).hexdigest()
-    print(currentPassword)
-    # adds one to the rightmost index of printed array
-    printedarray[passwordLength-1] += 1
-    # checks to make sure no index has reached the reset row (0)
-    for x in range(passwordLength-1, 0, -1):
-        if optionsarray[printedarray[x]] == 0:
-            printedarray[x] = 0
-            printedarray[x-1] += 1
+if args.bruteforce:
+    while currentPassword != endPassword:
+        # updates currentpassword and prints password (only for debugging purposes)
+        currentPassword = ""
+        for x in range(0,passwordLength):
+            currentPassword += chr(optionsarray[printedarray[x]])
+        # updates current password based on has encryption
+        if args.encryption == 'md5':
+            currentPassword = hashlib.md5(bytes(currentPassword, 'utf-8')).hexdigest()
+        if args.encryption == 'bcrypt':
+            currentPassword = bcrypt.hashpw(bytes(currentPassword, 'utf-8'), mysalt)
+        if args.encryption == 'sha265':
+            currentPassword = hashlib.sha256(bytes(currentPassword, 'utf-8')).hexdigest()
+        print(currentPassword)
+        # adds one to the rightmost index of printed array
+        printedarray[passwordLength-1] += 1
+        # checks to make sure no index has reached the reset row (0)
+        for x in range(passwordLength-1, 0, -1):
+            if optionsarray[printedarray[x]] == 0:
+                printedarray[x] = 0
+                printedarray[x-1] += 1
 
 # Use a breakpoint in the code line below to debug your script.
 # Press Ctrl+F8 to toggle the breakpoint.
