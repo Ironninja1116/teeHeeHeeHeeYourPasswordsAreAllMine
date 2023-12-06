@@ -4,9 +4,24 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import hashlib
 import bcrypt
-# checking if my filename matches actual file + extension bc im using windows
-import os
-print(os.listdir('.'))
+# checking if my filename matches actual file + extension bc im using windows (only used for testing)
+# import os
+# print(os.listdir('.'))
+# ARGPARSE
+import argparse
+myparser = argparse.ArgumentParser(description='crack a password')
+myparser.add_argument('--password', metavar='-PW', type=str, help='if you would like to insert your own plaintext password to crack (whether to test the program or to decrypt), this will store that password as a string')
+myparser.add_argument('--passwordlength', metavar='-PWl', type=int, help='use this to manually specify the length of the password if the password is not provided')
+myparser.add_argument('--uppercase', metavar='-u', help='if the password you\'re trying to crack includes uppercase characters, use this argument')
+myparser.add_argument('--lowercase', metavar='-l', help='if the password you\'re trying to crack includes lowercase characters, use this argument')
+myparser.add_argument('--numbers', metavar='-n', help='if the password you\'re trying to crack includes number characters, use this argument')
+myparser.add_argument('--symbols', metavar='-s', help='if the password you\'re trying to crack includes symbol characters, use this argument')
+myparser.add_argument('--hash', metavar='-H', type=str, help='use this to input a hash')
+myparser.add_argument('--MD5', metavar='-md5', help='if your password/hash uses md5 encryption use this argument')
+myparser.add_argument('--bcrypt', metavar='-b', help='if your password/hash uses bcrypt encryption use this argument')
+myparser.add_argument('--SHA265', metavar='-sha265', help='if the password/hash uses sha265 encryption use this argument')
+args = myparser.parse_args()
+
 # FUNCTIONS
 # For passwords that are given, this automatically determines what type of characters are in the password (ie: numbers, uppercase, lowercase, etc.) index 0 represents symbol, index 1 represents number, index 2 represents uppercase, index 3 represents lowercase
 def analyzecharacters(word):
