@@ -4,6 +4,11 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import hashlib
 import bcrypt
+mybytes = ''
+mysalt = ''
+myhash = ''
+
+
 # checking if my filename matches actual file + extension bc im using windows (only used for testing)
 # import os
 # print(os.listdir('.'))
@@ -158,17 +163,18 @@ if args.encryption == 'md5':
     endPassword = hashlib.md5(bytes(endPassword, 'utf-8')).hexdigest()
 if args.encryption == 'bcrypt':
     # gensalt sets rounds to 12, prefix to b"2b"
-    mysalt = bcrypt.gensalt()
-    endPassword = bcrypt.hashpw(bytes(endPassword, 'utf-8'), mysalt)
+    endsalt = bcrypt.gensalt()
+    endbytes = endPassword.encode('utf-8')
+    endhash = bcrypt.hashpw(endbytes, endsalt)
+#    endPassword = bcrypt.hashpw(bytes(endPassword, 'utf-8'), mysalt)
 if args.encryption == 'sha265':
     endPassword = hashlib.sha256(bytes(endPassword, 'utf-8')).hexdigest()
 # asks for and performs dictionary attack
 if args.dictionary:
-    input("correct cp1")
     if dictionaryattack(endPassword):
-        input("correct cp2")
+        print("Password Found!")
         exit()
-input("failed")
+print("Dictionary Attack Failed")
 # cracks password, using newly created arrays as
 currentPassword = None
 # adds one to the rightmost index of printed array
@@ -182,7 +188,11 @@ if args.bruteforce:
         if args.encryption == 'md5':
             currentPassword = hashlib.md5(bytes(currentPassword, 'utf-8')).hexdigest()
         if args.encryption == 'bcrypt':
-            currentPassword = bcrypt.hashpw(bytes(currentPassword, 'utf-8'), mysalt)
+            currentBytes = currentPassword.encode('utf-8')
+            if bcrypt.checkpw(currentBytes, endhash):
+                print("Password Found!")
+                exit(1)
+           # currentPassword = bcrypt.hashpw(bytes(currentPassword, 'utf-8'), mysalt)
         if args.encryption == 'sha265':
             currentPassword = hashlib.sha256(bytes(currentPassword, 'utf-8')).hexdigest()
         print(currentPassword)
