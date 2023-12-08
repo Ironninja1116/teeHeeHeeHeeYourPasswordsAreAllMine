@@ -15,16 +15,16 @@ myhash = ''
 # ARGPARSE
 import argparse
 myparser = argparse.ArgumentParser(prog='main', description='crack a password')
-myparser.add_argument('--password', metavar='-PW', type=str, help='if you would like to insert your own plaintext password to crack (whether to test the program or to decrypt), this will store that password as a string')
-myparser.add_argument('--passwordlength', metavar='-PWl', type=int, help='use this to manually specify the length of the password if the password is not provided [MUST BE SPECIFIED FOR HASHES]')
-myparser.add_argument('--uppercase', metavar='-u', type=bool, help='if the password you\'re trying to crack includes uppercase characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
-myparser.add_argument('--lowercase', metavar='-l', type=bool, help='if the password you\'re trying to crack includes lowercase characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
-myparser.add_argument('--numbers', metavar='-n', type=bool, help='if the password you\'re trying to crack includes number characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
-myparser.add_argument('--symbols', metavar='-s', type=bool, help='if the password you\'re trying to crack includes symbol characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
-myparser.add_argument('--hash', metavar='-H', type=str, help='use this to input a hash')
-myparser.add_argument('--encryption', metavar='-E', type=str, choices=['md5', 'bcrypt', 'sha256'], help='if your password/hash uses md5 encryption use this argument, options are md5, bcrypt, and sha256')
-myparser.add_argument('--dictionary', metavar='-D', type=bool, help='use this argument if you want to do a dictionary attack')
-myparser.add_argument('--bruteforce', metavar='-BF', type=bool, help='use this argument if you want to do a brute force attack')
+myparser.add_argument('--password', type=str, help='if you would like to insert your own plaintext password to crack (whether to test the program or to decrypt), this will store that password as a string')
+myparser.add_argument('--passwordlength',  type=int, help='use this to manually specify the length of the password if the password is not provided [MUST BE SPECIFIED FOR HASHES]')
+myparser.add_argument('--uppercase',  type=bool, help='if the password you\'re trying to crack includes uppercase characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
+myparser.add_argument('--lowercase',  type=bool, help='if the password you\'re trying to crack includes lowercase characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
+myparser.add_argument('--numbers',  type=bool, help='if the password you\'re trying to crack includes number characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
+myparser.add_argument('--symbols',  type=bool, help='if the password you\'re trying to crack includes symbol characters, use this argument [MUST BE SET TO TRUE IF NO PASSWORD IS SPECIFIED OR IF USING A HASH]')
+myparser.add_argument('--hash',  type=str, help='use this to input a hash (IF BCRYPT, DO THIS: \'hash\'')
+myparser.add_argument('--encryption',  type=str, choices=['md5', 'bcrypt', 'sha256'], help='if your password/hash uses md5 encryption use this argument, options are md5, bcrypt, and sha256')
+myparser.add_argument('--dictionary',  type=bool, help='use this argument if you want to do a dictionary attack')
+myparser.add_argument('--bruteforce',  type=bool, help='use this argument if you want to do a brute force attack')
 
 args = myparser.parse_args()
 
@@ -115,7 +115,8 @@ def dictionaryattack(correctPassword):
                     return True
             if args.encryption == 'bcrypt':
                 print("does " + password.replace("\n", "") + " == " + correctPassword + " ?")
-                if bcrypt.checkpw(((password.replace("\n", "")).encode('utf-8')), correctPassword):
+                # print("correct hash: " + correctPassword)
+                if bcrypt.checkpw(((password.replace("\n", "")).encode('utf-8')), bytes(correctPassword,'UTF-8')):
                     return True
             if args.encryption == 'sha256':
                 print("current plaintext: " + password.replace("\n", "" + " current hash: " + hashlib.sha256(bytes(password.replace("\n", ""), 'utf-8')).hexdigest() + " Your hash: " + correctPassword + " ?"))
@@ -194,7 +195,7 @@ if args.dictionary:
         print("Password Found!")
         exit()
 print("Dictionary Attack Failed")
-# cracks password, using newly created arrays as
+# cracks password, using newly created arrays
 currentPassword = None
 # adds one to the rightmost index of printed array
 if args.bruteforce:
@@ -203,14 +204,19 @@ if args.bruteforce:
         currentPassword = ""
         for x in range(0,passwordLength):
             currentPassword += chr(optionsarray[printedarray[x]])
-        # updates current password based on has encryption
+        # for encrypted hashes, encrypts the current password into a hash and checks if the hashes match
         if args.encryption == 'md5':
             print("plaintext: " + currentPassword + " hash: " + hashlib.md5(bytes(currentPassword, 'utf-8')).hexdigest())
             currentPassword = hashlib.md5(bytes(currentPassword, 'utf-8')).hexdigest()
         if args.encryption == 'bcrypt':
-            print("testing: " + currentPassword)
-            currentBytes = currentPassword.encode('utf-8')
-            if bcrypt.checkpw(currentBytes, endhash):
+
+              #  if bcrypt.checkpw(((currentpassword.replace("\n", "")).encode('utf-8')), bytes(endPassword,'UTF-8')):
+                   # return True
+            #
+            print("testing plaintext: " + currentPassword)
+            # currentBytes = currentPassword.encode('utf-8')
+            if bcrypt.checkpw(((currentPassword.replace("\n", "")).encode('utf-8')), bytes(endPassword,'UTF-8')):
+            # if bcrypt.checkpw(currentBytes, endhash):
                 print("Password Found!")
                 exit(1)
            # currentPassword = bcrypt.hashpw(bytes(currentPassword, 'utf-8'), mysalt)
@@ -225,7 +231,7 @@ if args.bruteforce:
             if optionsarray[printedarray[x]] == 0:
                 printedarray[x] = 0
                 printedarray[x-1] += 1
-print("Password Found!")
+print("Ended")
 # Use a breakpoint in the code line below to debug your script.
 # Press Ctrl+F8 to toggle the breakpoint.
 # Press the green button in the gutter to run the script.
