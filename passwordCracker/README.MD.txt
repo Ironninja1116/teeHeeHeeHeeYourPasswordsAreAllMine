@@ -15,26 +15,26 @@ All arguments are technically optional, but some are required in a few cases:
 -A dictionary attack (--dictionary) and/or a brute force attack (--bruteforce) must be used
 -if a hash is used, it's encryption (--encryption) type MUST be specified
 
+As all arguments are optional rather than positional, they may be placed in ANY order
+
 examples:
 ./main.py --password N7ss --bruteforce True
 ./main.py --password James --dictionary True --bruteforce True
-./main.py --password James --encryption sha256 --dictionary True
+./main.py --dictionary True --bruteforce True --password James
 ./main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True
+./main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True --uppercase True --bruteforce True
 ./main.py --passwordlength 4 --uppercase True --lowercase True --numbers True --symbols True --bruteforce True
 
-DEPENDENCIES:
-python
-hashlib
-bcrypt
-argparse
+Python and bcrypt MUST be installed before using
 
 Limitations:
 - The program takes a long time to solve passwords of 6+ characters (especially when multiple character types are used)
-- A bcrypt hash encrypted with many rounds will take a full second to decipher, making passwords of all lengths take much longer to solve
+- A bcrypt hash encrypted with many rounds will take a full second to decipher, making bcrypt passwords of all lengths take much longer to solve
 - Cannot be applied to any files
 - Only with md5, bcrypt, and sha-256
 
-Things that could be improved in the future
+Things that could be improved in the future:
 - Improve my algorithm so that it takes less time, maybe through the use of others' libraries
-- Have cleaner display settings, and add an argument to turn off every password test
+- Add an argument that allows users to choose whether every password check is printed or not
+- Make output look cleaner
 - Add more types of hashes.

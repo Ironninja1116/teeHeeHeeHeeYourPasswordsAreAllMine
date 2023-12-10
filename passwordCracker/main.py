@@ -194,7 +194,7 @@ if args.dictionary:
     if dictionaryattack(endPassword):
         print("Password Found!")
         exit()
-print("Dictionary Attack Failed")
+    print("Dictionary Attack Failed")
 # cracks password, using newly created arrays
 currentPassword = None
 # adds one to the rightmost index of printed array
@@ -204,6 +204,8 @@ if args.bruteforce:
         currentPassword = ""
         for x in range(0,passwordLength):
             currentPassword += chr(optionsarray[printedarray[x]])
+        if args.password:
+            print(currentPassword)
         # for encrypted hashes, encrypts the current password into a hash and checks if the hashes match
         if args.encryption == 'md5':
             print("plaintext: " + currentPassword + " hash: " + hashlib.md5(bytes(currentPassword, 'utf-8')).hexdigest())
@@ -231,7 +233,11 @@ if args.bruteforce:
             if optionsarray[printedarray[x]] == 0:
                 printedarray[x] = 0
                 printedarray[x-1] += 1
-print("Ended")
+    # prints result of attack
+    if currentPassword == endPassword:
+        print("Password Found!")
+    else:
+        print("Failed")
 # Use a breakpoint in the code line below to debug your script.
 # Press Ctrl+F8 to toggle the breakpoint.
 # Press the green button in the gutter to run the script.
