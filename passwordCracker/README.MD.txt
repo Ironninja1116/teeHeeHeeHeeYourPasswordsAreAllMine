@@ -1,3 +1,11 @@
+Python and bcrypt MUST be installed before using
+
+Steps to use
+1: Download the zip file or pull the git database
+2: unzip the file if necessary
+3: In the terminal, cd into the repository and navigate to the passwordCracker folder
+4: From the passwordCracker folder, run commands as listed bwlow
+
 ARGUMENTS
 --password [string]
 --hash [string]
@@ -24,8 +32,6 @@ examples:
 ./main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True
 ./main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True --uppercase True --bruteforce True
 ./main.py --passwordlength 4 --uppercase True --lowercase True --numbers True --symbols True --bruteforce True
-
-Python and bcrypt MUST be installed before using
 
 Limitations:
 - The program takes a long time to solve passwords of 6+ characters (especially when multiple character types are used)
