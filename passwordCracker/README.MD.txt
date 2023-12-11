@@ -26,12 +26,12 @@ All arguments are technically optional, but some are required in a few cases:
 As all arguments are optional rather than positional, they may be placed in ANY order
 
 examples:
-./main.py --password N7ss --bruteforce True
-./main.py --password James --dictionary True --bruteforce True
-./main.py --dictionary True --bruteforce True --password James
-./main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True
-./main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True --uppercase True --bruteforce True
-./main.py --passwordlength 4 --uppercase True --lowercase True --numbers True --symbols True --bruteforce True
+python3 main.py --password N7ss --bruteforce True
+python3 main.py --password James --dictionary True --bruteforce True
+python3 main.py --dictionary True --bruteforce True --password James
+python3 main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True
+python3 main.py --hash '5f4dcc3b5aa765d61d8327deb882cf99' --encryption bcrypt --dictionary True --passwordlength 8 --lowercase True --uppercase True --bruteforce True
+python3 main.py --passwordlength 4 --uppercase True --lowercase True --numbers True --symbols True --bruteforce True
 
 Limitations:
 - The program takes a long time to solve passwords of 6+ characters (especially when multiple character types are used)
